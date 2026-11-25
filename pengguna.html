@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manajemen Pengguna — Monitoring TKA Kelas VI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="sidebar-brand">
+        <img src="assets/logo-sdn2.svg" alt="SDN 2 Karangmangu">
+        <div>
+          <div class="sidebar-brand-title">MONITORING TKA</div>
+          <div class="sidebar-brand-sub">SDN 2 Karangmangu</div>
+        </div>
+      </a>
+      <nav id="sidebarNavLinks" class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div id="sidebarUserNama" class="fw-semibold text-white text-truncate">-</div>
+        <div id="sidebarUserRole" class="text-white-50 mb-2">-</div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-light flex-fill" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">Password</button>
+          <button type="button" class="btn btn-sm btn-danger js-logout-btn">Keluar</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebarDrawer">
+      <div class="offcanvas-header border-bottom border-secondary">
+        <span class="fw-bold">MONITORING TKA · SDN 2</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column justify-content-between">
+        <nav id="mobileNavLinks" class="sidebar-nav px-0"></nav>
+        <div class="pt-3 border-top border-secondary d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-light flex-fill" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">Ubah Password</button>
+          <button type="button" class="btn btn-sm btn-danger js-logout-btn">Keluar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="topbar-title-group">
+          <button type="button" class="btn-icon-square mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebarDrawer" aria-label="Buka menu">
+            <i data-lucide="menu"></i>
+          </button>
+          <h1 id="topbarPageTitle" class="topbar-title">Manajemen Pengguna &amp; Hak Akses</h1>
+        </div>
+        <div class="topbar-actions">
+          <span id="topbarUserName" class="d-none d-md-inline small fw-semibold text-secondary"></span>
+          <button type="button" class="btn-icon-square" id="btnThemeToggle" aria-label="Ganti tema">
+            <i id="themeToggleIcon" data-lucide="moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="surface-card">
+          <div class="surface-card-header">
+            <div>
+              <h2 class="surface-card-title">Daftar Akun Sistem</h2>
+              <div class="small text-secondary mt-1">Akun wali murid harus dihubungkan ke SiswaID anak masing-masing agar portal wali murid berfungsi.</div>
+            </div>
+            <button type="button" class="btn btn-navy btn-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
+              + Tambah Akun
+            </button>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-5">
+              <input type="search" id="userSearchInput" class="form-control form-control-sm" placeholder="Cari username, nama akun, atau nama siswa...">
+            </div>
+            <div class="col-md-3">
+              <select id="userRoleFilter" class="form-select form-select-sm">
+                <option value="">Semua Role</option>
+                <option value="admin">Administrator</option>
+                <option value="guru">Guru Kelas VI</option>
+                <option value="wali">Wali Murid</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-clean">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Nama Lengkap</th>
+                  <th>Role</th>
+                  <th>Siswa Terhubung</th>
+                  <th>Status</th>
+                  <th class="text-end">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="usersTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Tambah Pengguna -->
+  <div class="modal fade" id="modalTambahUser" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formTambahUser" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Tambah Akun Pengguna</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="addUserUsername">Username</label>
+              <input type="text" class="form-control" id="addUserUsername" minlength="4" placeholder="Huruf kecil/angka, min. 4 karakter" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="addUserNama">Nama Lengkap</label>
+              <input type="text" class="form-control" id="addUserNama" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="addUserRole">Role</label>
+              <select class="form-select" id="addUserRole">
+                <option value="guru">Guru Kelas VI</option>
+                <option value="wali">Wali Murid</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+            <div class="mb-3 d-none" id="addUserSiswaGroup">
+              <label class="form-label small fw-semibold" for="addUserSiswaId">Hubungkan dengan Siswa (Anak)</label>
+              <select class="form-select" id="addUserSiswaId"></select>
+            </div>
+            <div class="mb-2">
+              <label class="form-label small fw-semibold" for="addUserPassword">Password Awal (min. 8 karakter)</label>
+              <input type="password" class="form-control" id="addUserPassword" minlength="8" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-navy">Buat Akun</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit Pengguna -->
+  <div class="modal fade" id="modalEditUser" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formEditUser" novalidate>
+          <input type="hidden" id="editUserId">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Kelola Akun Pengguna</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="editUserUsername">Username</label>
+              <input type="text" class="form-control" id="editUserUsername" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="editUserNama">Nama Lengkap</label>
+              <input type="text" class="form-control" id="editUserNama" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold" for="editUserRole">Role</label>
+                <select class="form-select" id="editUserRole">
+                  <option value="admin">Administrator</option>
+                  <option value="guru">Guru Kelas VI</option>
+                  <option value="wali">Wali Murid</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold" for="editUserStatus">Status Akun</label>
+                <select class="form-select" id="editUserStatus">
+                  <option value="Aktif">Aktif</option>
+                  <option value="Nonaktif">Nonaktif</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-2 d-none" id="editUserSiswaGroup">
+              <label class="form-label small fw-semibold" for="editUserSiswaId">Hubungkan dengan Siswa (Anak)</label>
+              <select class="form-select" id="editUserSiswaId"></select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-navy">Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Reset Password -->
+  <div class="modal fade" id="modalResetPassword" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formResetPassword" novalidate>
+          <input type="hidden" id="resetUserId">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Reset Password Pengguna</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-secondary mb-3">Reset password untuk: <strong id="resetUserLabel" class="text-body">-</strong></p>
+            <div class="mb-2">
+              <label class="form-label small fw-semibold" for="resetPasswordBaru">Password Baru (min. 8 karakter)</label>
+              <input type="password" class="form-control" id="resetPasswordBaru" minlength="8" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-navy">Simpan Password Baru</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pengguna.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Siswa — Monitoring TKA Kelas VI SDN 2 Karangmangu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="siswa">
+  <div class="app-shell">
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="sidebar-brand">
+        <img src="assets/logo-sdn2.svg" alt="SDN 2 Karangmangu">
+        <div>
+          <div class="sidebar-brand-title">MONITORING TKA</div>
+          <div class="sidebar-brand-sub">SDN 2 Karangmangu</div>
+        </div>
+      </a>
+      <nav id="sidebarNavLinks" class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div id="sidebarUserNama" class="fw-semibold text-white text-truncate">-</div>
+        <div id="sidebarUserRole" class="text-white-50 mb-2">-</div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-light flex-fill" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">Password</button>
+          <button type="button" class="btn btn-sm btn-danger js-logout-btn">Keluar</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebarDrawer">
+      <div class="offcanvas-header border-bottom border-secondary">
+        <span class="fw-bold">MONITORING TKA · SDN 2</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column justify-content-between">
+        <nav id="mobileNavLinks" class="sidebar-nav px-0"></nav>
+        <div class="pt-3 border-top border-secondary d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-light flex-fill" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">Ubah Password</button>
+          <button type="button" class="btn btn-sm btn-danger js-logout-btn">Keluar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="topbar-title-group">
+          <button type="button" class="btn-icon-square mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebarDrawer" aria-label="Buka menu">
+            <i data-lucide="menu"></i>
+          </button>
+          <h1 id="topbarPageTitle" class="topbar-title">Manajemen Data Siswa Kelas VI</h1>
+        </div>
+        <div class="topbar-actions">
+          <span id="topbarUserName" class="d-none d-md-inline small fw-semibold text-secondary"></span>
+          <button type="button" class="btn-icon-square" id="btnThemeToggle" aria-label="Ganti tema">
+            <i id="themeToggleIcon" data-lucide="moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="row g-3 mb-4">
+          <div class="col-4">
+            <div class="stat-card">
+              <span class="stat-label">Total Terdaftar</span>
+              <span id="siswaCountTotal" class="stat-value">0</span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="stat-card">
+              <span class="stat-label">Status Aktif</span>
+              <span id="siswaCountAktif" class="stat-value status-success">0</span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="stat-card">
+              <span class="stat-label">Perlu Verifikasi</span>
+              <span id="siswaCountVerifikasi" class="stat-value status-warning">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="surface-card">
+          <div class="surface-card-header">
+            <h2 class="surface-card-title">Daftar Siswa Kelas VI</h2>
+            <button type="button" class="btn btn-navy btn-sm" data-bs-toggle="modal" data-bs-target="#modalTambahSiswa">
+              + Tambah Siswa
+            </button>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <input type="search" id="siswaSearchInput" class="form-control form-control-sm" placeholder="Cari nama atau NIS siswa...">
+            </div>
+            <div class="col-md-3">
+              <select id="siswaStatusFilter" class="form-select form-select-sm">
+                <option value="">Semua Status</option>
+                <option value="Aktif">Aktif</option>
+                <option value="Perlu Verifikasi">Perlu Verifikasi</option>
+                <option value="Nonaktif">Nonaktif</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-clean">
+              <thead>
+                <tr>
+                  <th>NIS</th>
+                  <th>Nama Siswa</th>
+                  <th>Kelas</th>
+                  <th>L/P</th>
+                  <th>Nama Orang Tua</th>
+                  <th>Status</th>
+                  <th class="text-end">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="siswaTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Tambah Siswa -->
+  <div class="modal fade" id="modalTambahSiswa" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formTambahSiswa" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Tambah Data Siswa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="addSiswaNis">NIS (disimpan sebagai teks)</label>
+              <input type="text" class="form-control" id="addSiswaNis" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="addSiswaNama">Nama Lengkap Siswa</label>
+              <input type="text" class="form-control" id="addSiswaNama" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold" for="addSiswaJk">Jenis Kelamin</label>
+                <select class="form-select" id="addSiswaJk">
+                  <option value="">Pilih</option>
+                  <option value="L">Laki-laki (L)</option>
+                  <option value="P">Perempuan (P)</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold" for="addSiswaKelas">Kelas</label>
+                <input type="text" class="form-control" id="addSiswaKelas" value="VI">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="addSiswaOrtu">Nama Orang Tua / Wali</label>
+              <input type="text" class="form-control" id="addSiswaOrtu">
+            </div>
+            <div class="mb-2">
+              <label class="form-label small fw-semibold" for="addSiswaHp">No. HP Orang Tua</label>
+              <input type="text" class="form-control" id="addSiswaHp">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-navy">Simpan Siswa</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Verifikasi / Edit Siswa -->
+  <div class="modal fade" id="modalEditSiswa" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formEditSiswa" novalidate>
+          <input type="hidden" id="editSiswaId">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Verifikasi &amp; Edit Siswa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="editSiswaNis">NIS</label>
+              <input type="text" class="form-control" id="editSiswaNis" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="editSiswaNama">Nama Siswa</label>
+              <input type="text" class="form-control" id="editSiswaNama" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-semibold" for="editSiswaJk">Jenis Kelamin</label>
+                <select class="form-select" id="editSiswaJk">
+                  <option value="">Pilih</option>
+                  <option value="L">Laki-laki (L)</option>
+                  <option value="P">Perempuan (P)</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-semibold" for="editSiswaKelas">Kelas</label>
+                <input type="text" class="form-control" id="editSiswaKelas">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="editSiswaOrtu">Nama Orang Tua / Wali</label>
+              <input type="text" class="form-control" id="editSiswaOrtu">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="editSiswaHp">No. HP Orang Tua</label>
+              <input type="text" class="form-control" id="editSiswaHp">
+            </div>
+            <div class="mb-2">
+              <label class="form-label small fw-semibold" for="editSiswaStatus">Status Verifikasi</label>
+              <select class="form-select" id="editSiswaStatus">
+                <option value="Aktif">Aktif</option>
+                <option value="Perlu Verifikasi">Perlu Verifikasi</option>
+                <option value="Nonaktif">Nonaktif</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-navy">Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/siswa.js"></script>
+</body>
+</html>

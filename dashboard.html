@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Monitoring TKA Kelas VI SDN 2 Karangmangu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar Desktop -->
+    <aside class="app-sidebar">
+      <a href="dashboard.html" class="sidebar-brand">
+        <img src="assets/logo-sdn2.svg" alt="SDN 2 Karangmangu">
+        <div>
+          <div class="sidebar-brand-title">MONITORING TKA</div>
+          <div class="sidebar-brand-sub">SDN 2 Karangmangu</div>
+        </div>
+      </a>
+      <nav id="sidebarNavLinks" class="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <div id="sidebarUserNama" class="fw-semibold text-white text-truncate">-</div>
+        <div id="sidebarUserRole" class="text-white-50 mb-2">-</div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-light flex-fill" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">Password</button>
+          <button type="button" class="btn btn-sm btn-danger js-logout-btn">Keluar</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Drawer Mobile -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebarDrawer">
+      <div class="offcanvas-header border-bottom border-secondary">
+        <span class="fw-bold">MONITORING TKA · SDN 2</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Tutup"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column justify-content-between">
+        <nav id="mobileNavLinks" class="sidebar-nav px-0"></nav>
+        <div class="pt-3 border-top border-secondary d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-light flex-fill" data-bs-toggle="modal" data-bs-target="#modalUbahPassword">Ubah Password</button>
+          <button type="button" class="btn btn-sm btn-danger js-logout-btn">Keluar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="topbar-title-group">
+          <button type="button" class="btn-icon-square mobile-menu-btn" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebarDrawer" aria-label="Buka menu">
+            <i data-lucide="menu"></i>
+          </button>
+          <h1 id="topbarPageTitle" class="topbar-title">Dashboard Monitoring TKA</h1>
+        </div>
+        <div class="topbar-actions">
+          <span id="topbarUserName" class="d-none d-md-inline small fw-semibold text-secondary"></span>
+          <button type="button" class="btn-icon-square" id="btnThemeToggle" aria-label="Ganti tema">
+            <i id="themeToggleIcon" data-lucide="moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- ==============================================================
+             TAMPILAN 1: DASHBOARD ADMIN & GURU
+             ============================================================== -->
+        <div id="adminGuruDashboardView" class="d-none">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+              <h2 class="h5 fw-bold mb-1">Ringkasan Hasil Tryout Kelas VI</h2>
+              <p class="small text-secondary mb-0">SDN 2 Karangmangu · Tahun Ajaran 2026/2027</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" id="btnSyncTryout" class="btn btn-accent d-inline-flex align-items-center gap-2">
+                <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i>
+                <span>SINKRONKAN DATA TRYOUT</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 8 Kartu Statistik -->
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Total Siswa</span>
+                <span id="statTotalSiswa" class="stat-value">0</span>
+                <span class="stat-sub">Terdaftar kelas VI</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Total Tryout</span>
+                <span id="statTotalTryout" class="stat-value">0</span>
+                <span class="stat-sub">Paket tryout aktif</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Siswa Sudah Tryout</span>
+                <span id="statSiswaSudah" class="stat-value">0</span>
+                <span class="stat-sub">Minimal 1 kali ikut</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Rata-rata Keseluruhan</span>
+                <span id="statRataGlobal" class="stat-value">-</span>
+                <span class="stat-sub">BI &amp; Matematika</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Rata-rata Bahasa Indonesia</span>
+                <span id="statRataBI" class="stat-value">-</span>
+                <span class="stat-sub">Skor rata-rata mapel</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Rata-rata Matematika</span>
+                <span id="statRataMTK" class="stat-value">-</span>
+                <span class="stat-sub">Skor rata-rata mapel</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Nilai Tertinggi</span>
+                <span id="statTertinggi" class="stat-value status-success">-</span>
+                <span class="stat-sub">Capaian maksimum</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Nilai Terendah</span>
+                <span id="statTerendah" class="stat-value status-danger">-</span>
+                <span class="stat-sub">Perlu pendampingan</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Grafik Chart.js -->
+          <div class="row g-3 mb-4">
+            <div class="col-lg-6">
+              <div class="surface-card h-100">
+                <div class="surface-card-header">
+                  <h3 class="surface-card-title">Rata-rata Bahasa Indonesia per Tryout</h3>
+                </div>
+                <div class="chart-container">
+                  <canvas id="chartDashBI"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="surface-card h-100">
+                <div class="surface-card-header">
+                  <h3 class="surface-card-title">Rata-rata Matematika per Tryout</h3>
+                </div>
+                <div class="chart-container">
+                  <canvas id="chartDashMTK"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-7">
+              <div class="surface-card h-100">
+                <div class="surface-card-header">
+                  <h3 class="surface-card-title">Perkembangan Rata-rata Kelas</h3>
+                </div>
+                <div class="chart-container">
+                  <canvas id="chartDashTrend"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="surface-card h-100">
+                <div class="surface-card-header">
+                  <h3 class="surface-card-title">Distribusi Kategori Nilai</h3>
+                </div>
+                <div class="chart-container">
+                  <canvas id="chartDashDistribusi"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabel Rekap Ringkas -->
+          <div class="surface-card">
+            <div class="surface-card-header">
+              <h3 class="surface-card-title">Rekap Nilai Siswa</h3>
+              <a href="rekap.html" class="btn btn-sm btn-outline-primary">Buka Rekap Lengkap &amp; Export</a>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md-4">
+                <input type="search" id="dashSearchInput" class="form-control form-control-sm" placeholder="Cari nama atau NIS siswa...">
+              </div>
+              <div class="col-6 col-md-2">
+                <select id="dashFilterKelas" class="form-select form-select-sm">
+                  <option value="">Semua Kelas</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-3">
+                <select id="dashFilterMapel" class="form-select form-select-sm">
+                  <option value="">Semua Mapel</option>
+                  <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                  <option value="Matematika">Matematika</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select id="dashSortSelect" class="form-select form-select-sm">
+                  <option value="nama">Urutkan: Nama (A-Z)</option>
+                  <option value="rataRataDesc">Nilai Tertinggi</option>
+                  <option value="rataRataAsc">Nilai Terendah</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-clean">
+                <thead>
+                  <tr>
+                    <th>Nama</th>
+                    <th>NIS</th>
+                    <th>Kelas</th>
+                    <th class="text-end">BI 1</th>
+                    <th class="text-end">BI 2</th>
+                    <th class="text-end">MTK 1</th>
+                    <th class="text-end">MTK 2</th>
+                    <th class="text-end">Rata-rata</th>
+                    <th class="text-end">Progress</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRekapTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==============================================================
+             TAMPILAN 2: PORTAL WALI MURID (KHUSUS HP & DESKTOP)
+             ============================================================== -->
+        <div id="waliPortalView" class="d-none">
+          <div id="waliErrorBanner" class="alert alert-danger d-none" role="alert"></div>
+
+          <div class="surface-card mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div>
+                <div class="small fw-semibold text-primary">SELAMAT DATANG</div>
+                <h2 id="waliWelcomeName" class="h4 fw-bold mb-2">-</h2>
+                <div class="small text-secondary">
+                  <span>Anak: <strong id="waliAnakNama" class="text-body">-</strong></span>
+                  <span aria-hidden="true"> · </span>
+                  <span>NIS: <strong id="waliAnakNis" class="text-body tabular-nums">-</strong></span>
+                  <span aria-hidden="true"> · </span>
+                  <span>Kelas: <strong id="waliAnakKelas" class="text-body">-</strong></span>
+                </div>
+              </div>
+              <div>
+                <a href="laporan.html" class="btn btn-navy d-inline-flex align-items-center gap-2">
+                  <i data-lucide="download" style="width:16px;height:16px;"></i>
+                  <span>UNDUH LAPORAN PERKEMBANGAN</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Rata-rata Bahasa Indonesia</span>
+                <span id="waliStatBI" class="stat-value">-</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Rata-rata Matematika</span>
+                <span id="waliStatMTK" class="stat-value">-</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Rata-rata Keseluruhan</span>
+                <span id="waliStatTotal" class="stat-value">-</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="stat-card">
+                <span class="stat-label">Jumlah Tryout Diikuti</span>
+                <span id="waliStatJumlah" class="stat-value">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="surface-card h-100">
+                <h3 class="surface-card-title mb-3">Perkembangan Bahasa Indonesia</h3>
+                <div class="chart-container-sm">
+                  <canvas id="chartWaliBI"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="surface-card h-100">
+                <h3 class="surface-card-title mb-3">Perkembangan Matematika</h3>
+                <div class="chart-container-sm">
+                  <canvas id="chartWaliMTK"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="surface-card mb-4">
+            <h3 class="surface-card-title mb-3">Riwayat Tryout Anak</h3>
+            <div class="table-responsive">
+              <table class="table table-clean">
+                <thead>
+                  <tr>
+                    <th>Nama Tryout</th>
+                    <th>Tanggal</th>
+                    <th>Mata Pelajaran</th>
+                    <th class="text-end">Benar</th>
+                    <th class="text-end">Total Soal</th>
+                    <th class="text-end">Nilai</th>
+                  </tr>
+                </thead>
+                <tbody id="waliRiwayatTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="surface-card h-100">
+                <h3 class="surface-card-title mb-3">Evaluasi Perkembangan</h3>
+                <p class="small text-secondary mb-2" id="waliEvalRingkasan">-</p>
+                <div class="small mb-2">
+                  <span class="text-secondary">Mata pelajaran lebih unggul: </span>
+                  <strong id="waliEvalMapelUnggul">-</strong>
+                </div>
+                <div class="small fw-semibold mb-1">Hal yang perlu ditingkatkan:</div>
+                <ul id="waliEvalTingkatkan" class="small text-secondary ps-3 mb-0"></ul>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="surface-card h-100">
+                <h3 class="surface-card-title mb-3">Catatan dari Guru</h3>
+                <div id="waliCatatanGuruList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Laporan Sinkronisasi -->
+  <div class="modal fade" id="modalSyncReport" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Laporan Sinkronisasi Multi-Spreadsheet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body" id="syncReportModalBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-navy" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
