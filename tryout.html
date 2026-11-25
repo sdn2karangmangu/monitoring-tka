@@ -74,6 +74,9 @@
               <div class="small text-secondary mt-1">Sumber dibaca mulai baris ke-2 (Kolom A-G). Data sumber asli tidak pernah diubah.</div>
             </div>
             <div class="d-flex flex-wrap gap-2">
+              <button type="button" id="btnOpenServerConfig" class="btn btn-sm btn-outline-secondary d-none" data-bs-toggle="modal" data-bs-target="#modalTryoutServerConfig">
+                Koneksi Server
+              </button>
               <button type="button" id="btnOpenTambahSumber" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalTambahSumber">
                 + Tambah Sumber
               </button>
@@ -170,6 +173,33 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
             <button type="submit" class="btn btn-navy">Simpan Sumber</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Pengaturan Koneksi Server (Admin) -->
+  <div class="modal fade" id="modalTryoutServerConfig" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="formTryoutServerConfig" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Pengaturan Koneksi Server</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label small fw-semibold" for="inputTryoutWebAppUrl">URL Web App Google Apps Script</label>
+            <input type="url" class="form-control mb-2" id="inputTryoutWebAppUrl" placeholder="https://script.google.com/macros/s/.../exec" required>
+            <div class="form-text mb-3">Tersimpan permanen di browser ini. Untuk GitHub Pages agar semua guru &amp; wali murid langsung terhubung, unduh <code>config.js</code> lalu unggah ke folder <code>js/config.js</code>.</div>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="button" class="btn btn-sm btn-outline-primary" id="btnTryoutDownloadConfig">Unduh config.js Permanen</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="btnTryoutCopyLink">Salin Tautan Otomatis</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-navy">Simpan &amp; Uji Koneksi</button>
           </div>
         </form>
       </div>

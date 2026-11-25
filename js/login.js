@@ -4,6 +4,40 @@
 (function (global) {
   'use strict';
 
+  function triggerDownloadConfig(url) {
+    var clean = String(url || global.TKA_CONFIG.getWebAppUrl() || '').trim();
+    if (!global.TKA_CONFIG.isValidWebAppUrl(clean)) {
+      global.TKA_API.showToast('Masukkan dan simpan URL Web App Google Apps Script yang valid terlebih dahulu.', 'warning');
+      return;
+    }
+    var content = global.TKA_CONFIG.buildPermanentConfigJs(clean);
+    var blob = new Blob([content], { type: 'application/javascript;charset=utf-8;' });
+    var objUrl = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = objUrl;
+    a.download = 'config.js';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(objUrl);
+    global.TKA_API.showToast('File config.js berhasil diunduh. Ganti file monitoring-tka/js/config.js agar permanen untuk semua pengguna.', 'success');
+  }
+
+  async function triggerCopyAutoLink(url) {
+    var clean = String(url || global.TKA_CONFIG.getWebAppUrl() || '').trim();
+    if (!global.TKA_CONFIG.isValidWebAppUrl(clean)) {
+      global.TKA_API.showToast('Masukkan URL Web App yang valid terlebih dahulu.', 'warning');
+      return;
+    }
+    var link = global.TKA_CONFIG.buildAutoConnectLink(clean);
+    try {
+      await global.navigator.clipboard.writeText(link);
+      global.TKA_API.showToast('Tautan otomatis berhasil disalin. Buka tautan ini di HP guru/wali murid agar langsung terhubung.', 'success');
+    } catch (e) {
+      global.TKA_API.showToast('Gagal menyalin otomatis. URL: ' + link, 'info');
+    }
+  }
+
   function initIndexPage() {
     global.TKA_AUTH.applyTheme(global.TKA_AUTH.getSavedTheme());
 
@@ -23,23 +57,43 @@
     updateUrlStatusBadge();
 
     var formUrl = document.getElementById('formWebAppUrl');
-    if (formUrl) {
-      var inputUrl = document.getElementById('inputWebAppUrl');
-      if (inputUrl) inputUrl.value = global.TKA_CONFIG.getWebAppUrl();
+    var inputUrl = document.getElementById('inputWebAppUrl');
+    if (inputUrl) inputUrl.value = global.TKA_CONFIG.getWebAppUrl();
 
+    var modalEl = document.getElementById('modalApiConfig');
+    if (modalEl && inputUrl) {
+      modalEl.addEventListener('show.bs.modal', function () {
+        inputUrl.value = global.TKA_CONFIG.getWebAppUrl();
+      });
+    }
+
+    var btnDl = document.getElementById('btnIndexDownloadConfig');
+    if (btnDl) {
+      btnDl.addEventListener('click', function () {
+        triggerDownloadConfig(inputUrl ? inputUrl.value : '');
+      });
+    }
+
+    var btnCopy = document.getElementById('btnIndexCopyLink');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', function () {
+        triggerCopyAutoLink(inputUrl ? inputUrl.value : '');
+      });
+    }
+
+    if (formUrl) {
       formUrl.addEventListener('submit', async function (ev) {
         ev.preventDefault();
         var val = inputUrl ? inputUrl.value.trim() : '';
-        if (!val || !/^https:\/\/script\.google\.com\/macros\/s\//i.test(val)) {
-          global.TKA_API.showToast('Masukkan URL Web App Google Apps Script yang valid (https://script.google.com/macros/s/...).', 'warning');
+        if (!global.TKA_CONFIG.isValidWebAppUrl(val)) {
+          global.TKA_API.showToast('Masukkan URL Web App Google Apps Script yang valid (https://script.google.com/macros/...).', 'warning');
           return;
         }
         global.TKA_CONFIG.setWebAppUrl(val);
         updateUrlStatusBadge();
         try {
           var ping = await global.TKA_API.apiCall('ping', {}, { loadingText: 'Menguji koneksi Web App...' });
-          global.TKA_API.showToast('Terhubung ke ' + (ping.sekolah || 'server') + '!', 'success');
-          var modalEl = document.getElementById('modalApiConfig');
+          global.TKA_API.showToast('Tersimpan tetap & terhubung ke ' + (ping.sekolah || 'server') + '!', 'success');
           var inst = modalEl && global.bootstrap.Modal.getInstance(modalEl);
           if (inst) inst.hide();
         } catch (err) {
@@ -58,10 +112,10 @@
     if (!el) return;
     var url = global.TKA_CONFIG.getWebAppUrl();
     if (url) {
-      el.textContent = 'Koneksi Web App telah dikonfigurasi';
+      el.textContent = 'Koneksi server tersimpan tetap dan siap digunakan';
       el.className = 'status-text status-success';
     } else {
-      el.textContent = 'URL Web App belum diatur — klik Pengaturan Koneksi';
+      el.textContent = 'URL Web App belum diatur — klik Pengaturan Koneksi Server';
       el.className = 'status-text status-warning';
     }
   }
@@ -94,20 +148,46 @@
       inputUrl.value = global.TKA_CONFIG.getWebAppUrl();
     }
 
+    var modalEl = document.getElementById('modalLoginApi');
+    if (modalEl && inputUrl) {
+      modalEl.addEventListener('show.bs.modal', function () {
+        inputUrl.value = global.TKA_CONFIG.getWebAppUrl();
+      });
+    }
+
+    var btnDl = document.getElementById('btnLoginDownloadConfig');
+    if (btnDl) {
+      btnDl.addEventListener('click', function () {
+        triggerDownloadConfig(inputUrl ? inputUrl.value : '');
+      });
+    }
+
+    var btnCopy = document.getElementById('btnLoginCopyLink');
+    if (btnCopy) {
+      btnCopy.addEventListener('click', function () {
+        triggerCopyAutoLink(inputUrl ? inputUrl.value : '');
+      });
+    }
+
     var formUrl = document.getElementById('formLoginApiUrl');
     if (formUrl) {
       formUrl.addEventListener('submit', async function (ev) {
         ev.preventDefault();
         var val = inputUrl ? inputUrl.value.trim() : '';
-        if (!val || !/^https:\/\/script\.google\.com\/macros\/s\//i.test(val)) {
-          global.TKA_API.showToast('URL Web App harus diawali https://script.google.com/macros/s/', 'warning');
+        if (!global.TKA_CONFIG.isValidWebAppUrl(val)) {
+          global.TKA_API.showToast('URL Web App harus diawali https://script.google.com/macros/', 'warning');
           return;
         }
         global.TKA_CONFIG.setWebAppUrl(val);
-        var modalEl = document.getElementById('modalLoginApi');
-        var inst = modalEl && global.bootstrap.Modal.getInstance(modalEl);
-        if (inst) inst.hide();
-        await checkInitialSetupState();
+        try {
+          var ping = await global.TKA_API.apiCall('ping', {}, { loadingText: 'Menguji koneksi server...' });
+          global.TKA_API.showToast('Koneksi server tersimpan tetap (' + (ping.sekolah || 'OK') + ').', 'success');
+          var inst = modalEl && global.bootstrap.Modal.getInstance(modalEl);
+          if (inst) inst.hide();
+          await checkInitialSetupState();
+        } catch (err) {
+          global.TKA_API.showToast('URL disimpan, tetapi koneksi gagal: ' + err.message, 'error');
+        }
       });
     }
 

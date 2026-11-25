@@ -2600,6 +2600,26 @@ function computeCombinedProgress_(progressBi, progressMtk) {
   return computeAverage_(items);
 }
 
+function computeSeriesProgress_(scores) {
+  if (!scores || scores.length < 2) return null;
+  return roundScore_(scores[scores.length - 1] - scores[0]);
+}
+
+function sortTryoutListNaturally_(list) {
+  return (list || []).slice().sort(function (a, b) {
+    var mapelCmp = String(a.mataPelajaran || '').localeCompare(String(b.mataPelajaran || ''), 'id');
+    if (mapelCmp !== 0) return mapelCmp;
+    return String(a.namaTryout || '').localeCompare(String(b.namaTryout || ''), 'id', { numeric: true });
+  });
+}
+
+function buildShortTryoutLabel_(toItem) {
+  var mapel = String(toItem.mataPelajaran || '').toLowerCase();
+  var prefix = mapel === 'bahasa indonesia' ? 'BI' : (mapel === 'matematika' ? 'MTK' : toItem.mataPelajaran);
+  var numMatch = String(toItem.namaTryout || '').match(/(\d+)\s*$/);
+  return numMatch ? (prefix + ' ' + numMatch[1]) : String(toItem.namaTryout || toItem.tryoutId);
+}
+
 function extractTryoutScore_(mapTryout, preferredTryoutId, tryoutById, mapel, urutanKe) {
   if (mapTryout[preferredTryoutId] && isValidNumber_(mapTryout[preferredTryoutId].nilai)) {
     return mapTryout[preferredTryoutId].nilai;

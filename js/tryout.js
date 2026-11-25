@@ -19,6 +19,12 @@
       btnAddSumber.classList.add('d-none');
     }
 
+    var btnServerCfg = document.getElementById('btnOpenServerConfig');
+    if (btnServerCfg && user.role === 'admin') {
+      btnServerCfg.classList.remove('d-none');
+      initAdminServerModal();
+    }
+
     var btnSync = document.getElementById('btnTryoutSync');
     if (btnSync) {
       btnSync.addEventListener('click', handleSync);
@@ -35,6 +41,78 @@
     }
 
     await loadTryoutPageData(user);
+  }
+
+  function initAdminServerModal() {
+    var modalEl = document.getElementById('modalTryoutServerConfig');
+    var inputUrl = document.getElementById('inputTryoutWebAppUrl');
+    var form = document.getElementById('formTryoutServerConfig');
+    var btnDl = document.getElementById('btnTryoutDownloadConfig');
+    var btnCopy = document.getElementById('btnTryoutCopyLink');
+
+    if (modalEl && inputUrl) {
+      modalEl.addEventListener('show.bs.modal', function () {
+        inputUrl.value = global.TKA_CONFIG.getWebAppUrl();
+      });
+    }
+
+    if (btnDl) {
+      btnDl.addEventListener('click', function () {
+        var clean = String((inputUrl && inputUrl.value) || global.TKA_CONFIG.getWebAppUrl() || '').trim();
+        if (!global.TKA_CONFIG.isValidWebAppUrl(clean)) {
+          global.TKA_API.showToast('URL Web App tidak valid.', 'warning');
+          return;
+        }
+        var content = global.TKA_CONFIG.buildPermanentConfigJs(clean);
+        var blob = new Blob([content], { type: 'application/javascript;charset=utf-8;' });
+        var objUrl = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = objUrl;
+        a.download = 'config.js';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objUrl);
+        global.TKA_API.showToast('File config.js permanen berhasil diunduh.', 'success');
+      });
+    }
+
+    if (btnCopy) {
+      btnCopy.addEventListener('click', async function () {
+        var clean = String((inputUrl && inputUrl.value) || global.TKA_CONFIG.getWebAppUrl() || '').trim();
+        if (!global.TKA_CONFIG.isValidWebAppUrl(clean)) {
+          global.TKA_API.showToast('URL Web App tidak valid.', 'warning');
+          return;
+        }
+        var link = global.TKA_CONFIG.buildAutoConnectLink(clean);
+        try {
+          await global.navigator.clipboard.writeText(link);
+          global.TKA_API.showToast('Tautan otomatis berhasil disalin.', 'success');
+        } catch (e) {
+          global.TKA_API.showToast('Salin manual tautan: ' + link, 'info');
+        }
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', async function (ev) {
+        ev.preventDefault();
+        var val = inputUrl ? inputUrl.value.trim() : '';
+        if (!global.TKA_CONFIG.isValidWebAppUrl(val)) {
+          global.TKA_API.showToast('URL Web App harus diawali https://script.google.com/macros/', 'warning');
+          return;
+        }
+        global.TKA_CONFIG.setWebAppUrl(val);
+        try {
+          var ping = await global.TKA_API.apiCall('ping', {}, { loadingText: 'Menguji koneksi server...' });
+          global.TKA_API.showToast('Koneksi server tersimpan tetap (' + (ping.sekolah || 'OK') + ').', 'success');
+          var inst = modalEl && global.bootstrap.Modal.getInstance(modalEl);
+          if (inst) inst.hide();
+        } catch (err) {
+          global.TKA_API.showToast('URL disimpan, tetapi uji koneksi gagal: ' + err.message, 'error');
+        }
+      });
+    }
   }
 
   async function loadTryoutPageData(user) {
