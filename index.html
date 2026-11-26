@@ -13,54 +13,51 @@
 </head>
 <body data-page="index">
   <header class="app-topbar border-bottom">
-    <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none">
-      <img src="assets/logo-sdn2.svg" alt="Lambang SDN 2 Karangmangu" width="32" height="32">
-      <span class="fw-bold text-nowrap" style="color: var(--text-primary);">SDN 2 Karangmangu</span>
+    <a href="index.html" class="d-flex align-items-center gap-2 text-decoration-none min-w-0">
+      <img src="assets/logo-sdn2.svg" alt="Lambang SDN 2 Karangmangu" width="32" height="32" class="flex-shrink-0">
+      <span class="fw-bold text-truncate" style="color: var(--text-primary);">SDN 2 Karangmangu</span>
     </a>
     <nav class="d-none d-md-flex align-items-center gap-4 small fw-semibold">
-      <a href="#fitur" class="text-decoration-none" style="color: var(--text-secondary);">Fitur Utama</a>
-      <a href="#alur" class="text-decoration-none" style="color: var(--text-secondary);">Alur Pemantauan</a>
-      <a href="login.html" class="text-decoration-none" style="color: var(--text-secondary);">Portal Wali Murid</a>
+      <a href="#fitur" class="text-decoration-none text-nowrap" style="color: var(--text-secondary);">Fitur Utama</a>
+      <a href="#alur" class="text-decoration-none text-nowrap" style="color: var(--text-secondary);">Alur Pemantauan</a>
+      <a href="login.html" class="text-decoration-none text-nowrap" style="color: var(--text-secondary);">Portal Wali Murid</a>
     </nav>
-    <div class="d-flex align-items-center gap-2">
+    <div class="d-flex align-items-center gap-2 flex-shrink-0">
       <button type="button" class="btn-icon-square" id="btnPublicTheme" aria-label="Ganti tema tampilan">
         <i id="themeToggleIcon" data-lucide="moon"></i>
       </button>
-      <a href="login.html" class="btn btn-navy btn-sm px-3 py-2">Masuk Portal</a>
+      <a href="login.html" class="btn btn-navy btn-sm px-3 py-2 text-nowrap">Masuk Portal</a>
     </div>
   </header>
 
   <section class="public-hero">
-    <div class="container">
+    <div class="container px-3 px-sm-4">
       <div class="row align-items-center g-4">
         <div class="col-lg-8">
           <p class="mb-2 small fw-semibold text-info">SDN 2 Karangmangu · Tahun Ajaran 2026/2027</p>
           <h1 class="display-6 fw-bold mb-3" style="text-wrap: balance;">
             Monitoring Hasil Tryout TKA Kelas VI
           </h1>
-          <p class="lead mb-4 opacity-90" style="max-width: 640px;">
-            Pemantauan hasil Tryout Bahasa Indonesia dan Matematika secara terpusat bagi guru kelas dan wali murid untuk mendampingi kesiapan belajar 30 siswa kelas VI.
+          <p class="lead mb-4 opacity-90" style="max-width: 640px; font-size: clamp(0.98rem, 2.5vw, 1.18rem);">
+            Pemantauan hasil Tryout Bahasa Indonesia dan Matematika secara terpusat bagi guru kelas dan wali murid untuk mendampingi kesiapan belajar 32 siswa kelas VI.
           </p>
-          <div class="d-flex flex-wrap align-items-center gap-3">
-            <a id="btnHeroPrimary" href="login.html" class="btn btn-light fw-bold px-4 py-2 text-primary">
+          <div class="d-flex flex-column flex-sm-row flex-wrap align-items-stretch align-items-sm-center gap-2 gap-sm-3">
+            <a id="btnHeroPrimary" href="login.html" class="btn btn-light fw-bold px-4 py-2 text-primary btn-mobile-full">
               Masuk ke Sistem
             </a>
-            <button type="button"
-  class="btn btn-outline-light px-3 py-2 d-none"
-  data-bs-toggle="modal"
-  data-bs-target="#modalApiConfig">
-  Pengaturan Koneksi Server
-</button>
+            <button type="button" class="btn btn-outline-light px-3 py-2 btn-mobile-full" data-bs-toggle="modal" data-bs-target="#modalApiConfig">
+              Pengaturan Koneksi Server
+            </button>
           </div>
           <div class="mt-3">
-            <span id="apiUrlStatusText" class="status-text text-white-50">Memeriksa koneksi...</span>
+            <span id="apiUrlStatusText" class="status-text text-white-50 text-wrap">Memeriksa koneksi...</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <main class="container py-5">
+  <main class="container px-3 px-sm-4 py-4 py-md-5">
     <section id="fitur" class="mb-5">
       <div class="row g-3">
         <div class="col-md-4">

@@ -65,23 +65,23 @@
         <!-- Toolbar Pengaturan Cetak (Tidak ikut tercetak) -->
         <div class="surface-card mb-4 no-print">
           <div class="row g-2 align-items-end">
-            <div class="col-md-3" id="laporanSiswaPickerGroup">
+            <div class="col-12 col-sm-6 col-lg-3" id="laporanSiswaPickerGroup">
               <label class="form-label small fw-semibold" for="laporanSiswaSelect">Pilih Siswa</label>
               <select id="laporanSiswaSelect" class="form-select form-select-sm"></select>
             </div>
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
               <label class="form-label small fw-semibold" for="inputLapTanggal">Tempat &amp; Tanggal</label>
               <input type="text" id="inputLapTanggal" class="form-control form-control-sm">
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-lg-2">
               <label class="form-label small fw-semibold" for="inputLapGuru">Nama Guru Kelas</label>
               <input type="text" id="inputLapGuru" class="form-control form-control-sm" placeholder="Nama Guru">
             </div>
-            <div class="col-md-2">
+            <div class="col-6 col-lg-2">
               <label class="form-label small fw-semibold" for="inputLapKepsek">Nama Kepala Sekolah</label>
               <input type="text" id="inputLapKepsek" class="form-control form-control-sm" placeholder="Nama Kepsek">
             </div>
-            <div class="col-md-2 d-grid">
+            <div class="col-12 col-lg-2 d-grid">
               <button type="button" id="btnCetakLaporan" class="btn btn-navy btn-sm">Cetak / Simpan PDF</button>
             </div>
           </div>
@@ -103,46 +103,48 @@
           </div>
 
           <!-- Identitas Siswa -->
-          <table class="table table-sm table-borderless mb-3 small">
-            <tbody>
-              <tr>
-                <td style="width: 140px;">Nama Siswa</td>
-                <td style="width: 12px;">:</td>
-                <td><strong id="lapNama">-</strong></td>
-                <td style="width: 120px;">Kelas</td>
-                <td style="width: 12px;">:</td>
-                <td><strong id="lapKelas">-</strong></td>
-              </tr>
-              <tr>
-                <td>NIS</td>
-                <td>:</td>
-                <td class="tabular-nums"><strong id="lapNis">-</strong></td>
-                <td>Orang Tua/Wali</td>
-                <td>:</td>
-                <td><strong id="lapOrtu">-</strong></td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="lap-identity-grid">
+            <div class="lap-identity-item">
+              <span class="lap-identity-label">Nama Siswa</span>
+              <span>:</span>
+              <strong id="lapNama" class="lap-identity-val">-</strong>
+            </div>
+            <div class="lap-identity-item">
+              <span class="lap-identity-label">Kelas</span>
+              <span>:</span>
+              <strong id="lapKelas" class="lap-identity-val">-</strong>
+            </div>
+            <div class="lap-identity-item">
+              <span class="lap-identity-label">NIS</span>
+              <span>:</span>
+              <strong id="lapNis" class="lap-identity-val tabular-nums">-</strong>
+            </div>
+            <div class="lap-identity-item">
+              <span class="lap-identity-label">Orang Tua/Wali</span>
+              <span>:</span>
+              <strong id="lapOrtu" class="lap-identity-val">-</strong>
+            </div>
+          </div>
 
           <!-- Ringkasan Nilai Bahasa Indonesia & Matematika -->
-          <div class="row g-2 mb-3 small">
-            <div class="col-5">
-              <div class="border rounded p-2">
+          <div class="row g-2 mb-3 small lap-summary-row">
+            <div class="col-12 col-sm-5 lap-col-mapel">
+              <div class="border rounded p-2 h-100">
                 <div class="fw-bold mb-1">Bahasa Indonesia</div>
                 <div class="d-flex justify-content-between"><span>Tryout 1:</span><strong id="lapBi1" class="tabular-nums">-</strong></div>
                 <div class="d-flex justify-content-between"><span>Tryout 2:</span><strong id="lapBi2" class="tabular-nums">-</strong></div>
                 <div class="d-flex justify-content-between border-top mt-1 pt-1"><span>Rata-rata:</span><strong id="lapBiRata" class="tabular-nums">-</strong></div>
               </div>
             </div>
-            <div class="col-5">
-              <div class="border rounded p-2">
+            <div class="col-12 col-sm-5 lap-col-mapel">
+              <div class="border rounded p-2 h-100">
                 <div class="fw-bold mb-1">Matematika</div>
                 <div class="d-flex justify-content-between"><span>Tryout 1:</span><strong id="lapMtk1" class="tabular-nums">-</strong></div>
                 <div class="d-flex justify-content-between"><span>Tryout 2:</span><strong id="lapMtk2" class="tabular-nums">-</strong></div>
                 <div class="d-flex justify-content-between border-top mt-1 pt-1"><span>Rata-rata:</span><strong id="lapMtkRata" class="tabular-nums">-</strong></div>
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-12 col-sm-2 lap-col-avg">
               <div class="border rounded p-2 h-100 d-flex flex-column justify-content-center text-center">
                 <div class="text-secondary">Rata-rata</div>
                 <div id="lapRataGlobal" class="fs-4 fw-bold tabular-nums">-</div>
@@ -153,19 +155,21 @@
           <!-- Tabel Rekap Hasil Seluruh Tryout -->
           <div class="mb-3">
             <div class="fw-bold small mb-1">Rekap Hasil Seluruh Tryout</div>
-            <table class="table table-bordered table-sm small mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>No</th>
-                  <th>Nama Tryout</th>
-                  <th>Mata Pelajaran</th>
-                  <th>Tanggal</th>
-                  <th class="text-end">Benar / Soal</th>
-                  <th class="text-end">Nilai</th>
-                </tr>
-              </thead>
-              <tbody id="lapRiwayatTbody"></tbody>
-            </table>
+            <div class="table-responsive lap-table-wrap">
+              <table class="table table-bordered table-sm small mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>No</th>
+                    <th>Nama Tryout</th>
+                    <th>Mata Pelajaran</th>
+                    <th>Tanggal</th>
+                    <th class="text-end">Benar / Soal</th>
+                    <th class="text-end">Nilai</th>
+                  </tr>
+                </thead>
+                <tbody id="lapRiwayatTbody"></tbody>
+              </table>
+            </div>
           </div>
 
           <!-- Grafik Perkembangan -->

@@ -222,7 +222,18 @@
     if (desktopNav) desktopNav.innerHTML = linksHtml;
 
     var mobileNav = document.getElementById('mobileNavLinks');
-    if (mobileNav) mobileNav.innerHTML = linksHtml;
+    if (mobileNav) {
+      mobileNav.innerHTML = linksHtml;
+      mobileNav.addEventListener('click', function (ev) {
+        var link = ev.target && ev.target.closest ? ev.target.closest('a.sidebar-link') : null;
+        if (!link) return;
+        var drawerEl = document.getElementById('mobileSidebarDrawer');
+        if (drawerEl && global.bootstrap && global.bootstrap.Offcanvas) {
+          var inst = global.bootstrap.Offcanvas.getInstance(drawerEl);
+          if (inst) inst.hide();
+        }
+      });
+    }
 
     var userNamaEl = document.getElementById('sidebarUserNama');
     if (userNamaEl) userNamaEl.textContent = user.nama || user.username;
@@ -231,7 +242,11 @@
     if (userRoleEl) userRoleEl.textContent = getRoleDisplayName(user.role);
 
     var topbarUserEl = document.getElementById('topbarUserName');
-    if (topbarUserEl) topbarUserEl.textContent = user.nama || user.username;
+    if (topbarUserEl) {
+      topbarUserEl.textContent = user.nama || user.username;
+      topbarUserEl.classList.add('text-truncate');
+      topbarUserEl.style.maxWidth = '200px';
+    }
 
     var pageTitleEl = document.getElementById('topbarPageTitle');
     if (pageTitleEl && opts.pageTitle) pageTitleEl.textContent = opts.pageTitle;

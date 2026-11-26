@@ -78,29 +78,29 @@
               <h2 class="surface-card-title">Tabel Rekap Nilai Seluruh Siswa</h2>
               <div id="rekapCountLabel" class="small text-secondary mt-1">Memuat data...</div>
             </div>
-            <div class="d-flex flex-wrap gap-2 no-print">
-              <button type="button" id="btnExportCsv" class="btn btn-sm btn-outline-success">Export CSV / Excel</button>
-              <button type="button" id="btnPrintRekap" class="btn btn-sm btn-navy">Cetak Rekap</button>
+            <div class="d-flex flex-wrap gap-2 w-mobile-100 no-print">
+              <button type="button" id="btnExportCsv" class="btn btn-sm btn-outline-success flex-fill flex-sm-grow-0">Export CSV / Excel</button>
+              <button type="button" id="btnPrintRekap" class="btn btn-sm btn-navy flex-fill flex-sm-grow-0">Cetak Rekap</button>
             </div>
           </div>
 
           <div class="row g-2 mb-3 no-print">
-            <div class="col-md-4">
+            <div class="col-12 col-sm-6 col-lg-4">
               <input type="search" id="rekapSearch" class="form-control form-control-sm" placeholder="Cari nama atau NIS siswa...">
             </div>
-            <div class="col-6 col-md-2">
+            <div class="col-6 col-lg-2">
               <select id="rekapFilterKelas" class="form-select form-select-sm">
                 <option value="">Semua Kelas</option>
               </select>
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-lg-3">
               <select id="rekapFilterMapel" class="form-select form-select-sm">
                 <option value="">Semua Mata Pelajaran</option>
                 <option value="Bahasa Indonesia">Bahasa Indonesia</option>
                 <option value="Matematika">Matematika</option>
               </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-12 col-sm-6 col-lg-3">
               <select id="rekapSort" class="form-select form-select-sm">
                 <option value="nama">Urutkan: Nama (A-Z)</option>
                 <option value="rataRataDesc">Nilai Tertinggi</option>
